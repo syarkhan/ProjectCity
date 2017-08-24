@@ -215,10 +215,8 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             txtUrl = (TextView) itemView.findViewById(R.id.txtUrl);
             imgPost = (ImageView) itemView.findViewById(R.id.imgPost);
             imgProfilePic = (ImageView) itemView.findViewById(R.id.imgProfilePic);
-            btnHelpful = (Button) itemView.findViewById(R.id.btnHelpful);
-            btnComments = (Button) itemView.findViewById(R.id.btnComments);
-
-
+//            btnHelpful = (Button) itemView.findViewById(R.id.btnHelpful);
+//            btnComments = (Button) itemView.findViewById(R.id.btnComments);
 
         }
 

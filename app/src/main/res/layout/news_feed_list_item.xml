@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,54 +10,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/feed_item_margin"
+        android:paddingTop="@dimen/feed_item_padding_top"
         android:background="@drawable/feed_item_rounded_corner"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/feed_item_padding_top_bottom"
-        android:paddingTop="@dimen/feed_item_padding_top_bottom" >
+        android:orientation="vertical">
+
+        <!--android:paddingTop="@dimen/feed_item_padding_top_bottom">-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right" >
+            android:paddingRight="@dimen/feed_item_padding_left_right">
 
             <!--<com.android.volley.toolbox.NetworkImageView-->
-                <!--android:id="@+id/profilePic"-->
-                <!--android:layout_width="@dimen/feed_item_profile_pic"-->
-                <!--android:layout_height="@dimen/feed_item_profile_pic"-->
-                <!--android:scaleType="fitCenter" >-->
+            <!--android:id="@+id/profilePic"-->
+            <!--android:layout_width="@dimen/feed_item_profile_pic"-->
+            <!--android:layout_height="@dimen/feed_item_profile_pic"-->
+            <!--android:scaleType="fitCenter" >-->
             <!--</com.android.volley.toolbox.NetworkImageView>-->
             <ImageView
                 android:id="@+id/imgProfilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
-                android:src="@drawable/loginbg"
                 android:scaleType="fitXY"
-                >
-            </ImageView>
+                android:src="@drawable/loginbg"></ImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd" >
+                android:paddingLeft="@dimen/feed_item_profile_info_padd">
 
                 <TextView
                     android:id="@+id/txtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sheryar Khan"
                     android:fontFamily="sans-serif-smallcaps"
+                    android:text="Sheryar Khan"
                     android:textSize="@dimen/feed_item_profile_name"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtTimeStamp"
                     android:layout_width="match_parent"
-                    android:text="20 mins ago"
                     android:layout_height="wrap_content"
+                    android:text="20 mins ago"
                     android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
             </LinearLayout>
@@ -68,9 +67,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:text="Lorum Ipsum Lorum Ipsum Lorum Ipsum Lorum Ipsum "
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingTop="@dimen/feed_item_status_pad_top" />
+            android:paddingTop="@dimen/feed_item_status_pad_top"
+            android:text="Lorum Ipsum Lorum Ipsum Lorum Ipsum Lorum Ipsum " />
 
         <TextView
             android:id="@+id/txtUrl"
@@ -89,32 +88,68 @@
             android:background="@color/white"
             android:scaleType="fitCenter"
             android:src="@drawable/q1bg"
-
-
             />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Helpful"
-            android:id="@+id/btnHelpful"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comments"
-            android:id="@+id/btnComments"
 
-            />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/comment" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                style="@android:style/Widget.Material.Light.ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/helpfull"
+                android:layout_marginStart="16dp" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/unhelpful"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/imageButton"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <!--<info.androidhive.listviewfeed.FeedImageView-->
-            <!--android:id="@+id/feedImage1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--android:scaleType="fitXY"-->
-            <!--android:visibility="visible" />-->
-
+        <!--android:id="@+id/feedImage1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:visibility="visible" />-->
 
 
     </LinearLayout>
