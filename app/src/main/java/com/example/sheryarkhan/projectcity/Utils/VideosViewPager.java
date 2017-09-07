@@ -67,7 +67,7 @@ public class VideosViewPager extends VideoView {
             //imageView = new ImageView(context);
 
             videosViewPager.setVisibility(VISIBLE);
-            String videoPath = "android.resource://"+activity.getPackageName()+"/" + R.raw.video2;
+            String videoPath = "android.resource://"+activity.getPackageName()+"/";
             Uri uri = Uri.parse(videoPath);
 
 //            DisplayMetrics displayMetrics = new DisplayMetrics();

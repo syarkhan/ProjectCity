@@ -3,7 +3,7 @@
     <!--#243b55-->
 <resources>
     <color name="colorPrimary">#243b55</color>
-    <color name="colorPrimaryDark">#141E30</color>
+    <color name="colorPrimaryDark">#141e30</color>
     <color name="colorAccent">#a9dbfd</color>
 
     <color name="white">#ffffff</color>
