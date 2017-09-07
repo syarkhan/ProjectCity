@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity;
+package com.example.sheryarkhan.projectcity.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sheryarkhan.projectcity.R;
+import data.UserClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
@@ -188,7 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                        FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
 
-                       userClass userClassObj = new  userClass(username1,currentTimeStamp,"pic2","badass","",strPhoneNo,true);
+                       UserClass userClassObj = new UserClass(username1,currentTimeStamp,"pic2","badass","",strPhoneNo,true);
 
                        databaseReference.child("Users/"+user.getUid()).setValue(userClassObj);
 

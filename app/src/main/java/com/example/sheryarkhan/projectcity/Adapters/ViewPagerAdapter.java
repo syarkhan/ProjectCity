@@ -1,22 +1,14 @@
-package com.example.sheryarkhan.projectcity.adapter;
+package com.example.sheryarkhan.projectcity.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
 import com.example.sheryarkhan.projectcity.R;
 import com.example.sheryarkhan.projectcity.Utils.ImagesAndVideosViewPager;
-import com.example.sheryarkhan.projectcity.Utils.VideosViewPager;
 
 import java.util.Collections;
 import java.util.List;

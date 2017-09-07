@@ -1,10 +1,9 @@
-package com.example.sheryarkhan.projectcity.adapter;
+package com.example.sheryarkhan.projectcity.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -14,27 +13,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+import com.example.sheryarkhan.projectcity.Activities.PostNewsActivity;
 import com.example.sheryarkhan.projectcity.Glide.GlideApp;
-import com.example.sheryarkhan.projectcity.PostImageDisplayActivity;
-import com.example.sheryarkhan.projectcity.ProfileActivity;
+import com.example.sheryarkhan.projectcity.Activities.ProfileActivity;
 import com.example.sheryarkhan.projectcity.R;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,9 +55,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
     public static List<PostsPOJO> newsFeedItemPOJOs = Collections.emptyList();
 
-    public NewsFeedListAdapter(Context context, List<PostsPOJO> newsFeedItems,List<String> images)
+    public NewsFeedListAdapter(List<PostsPOJO> newsFeedItems,List<String> images)
     {
-        this.context = context;
+        //this.context = context;
         this.newsFeedItemPOJOs = newsFeedItems;
         this.images = images;
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -106,7 +98,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     @Override
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Context context = parent.getContext();
+        context = parent.getContext();
         return new OnlyPostImageViewHolder(LayoutInflater.from(context).inflate(R.layout.news_feed_list_item, parent, false));
 //        switch (viewType){
 //            case TYPE_PICTURE:
@@ -137,8 +129,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
         //final Context context = holder.itemView.getContext();
 //        if(holder.getItemViewType() == TYPE_PICTURE){
+            context = holder.itemView.getContext();
             OnlyPostImageViewHolder mholder = (OnlyPostImageViewHolder) holder;
-            setUpPictureView(mholder,position);
+            setUpPictureView(context,mholder,position);
 //        }
 //        else {
 //            OnlyPostVideoViewHolder mHolder = (OnlyPostVideoViewHolder) holder;
@@ -190,9 +183,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
     }
 
-    private void setUpPictureView(final OnlyPostImageViewHolder mholder, final int position) {
+    private void setUpPictureView(final Context context, final OnlyPostImageViewHolder mholder, final int position) {
 
-        final Context context = mholder.itemView.getContext();
+
         if(position == 0)
         {
             mholder.shareNewsLayout.setVisibility(View.VISIBLE);
@@ -205,25 +198,14 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         mholder.shareNewsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(context, PostNewsActivity.class);
+                context.startActivity(intent);
                 Toast.makeText(context,"Share news post",Toast.LENGTH_SHORT).show();
             }
         });
         PostsPOJO currentData = newsFeedItemPOJOs.get(position);
-        //images.add(currentData.getcontent_post().get(position));
 
-//        StorageReference filePath = storageReference.child("images").child(currentData.getPostContent().get(position)+".jpg");
-//        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                try {
-//                    Glide.with(context)
-//                            .load(uri)
-//                            .into(mholder.imgProfilePic);
-//                } catch (Exception ex) {
-//                    Log.d("error", ex.toString());
-//                }
-//            }
-//        });
 
         viewPagerAdapter = new ViewPagerAdapter(context,currentData.getcontent_post());
         mholder.viewPager.setAdapter(viewPagerAdapter);

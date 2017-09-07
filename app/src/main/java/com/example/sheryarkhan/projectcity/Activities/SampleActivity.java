@@ -1,7 +1,9 @@
-package com.example.sheryarkhan.projectcity;
+package com.example.sheryarkhan.projectcity.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.sheryarkhan.projectcity.R;
 
 public class SampleActivity extends AppCompatActivity {
 

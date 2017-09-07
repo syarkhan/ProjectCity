@@ -1,9 +1,11 @@
-package com.example.sheryarkhan.projectcity;
+package com.example.sheryarkhan.projectcity.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.example.sheryarkhan.projectcity.R;
 
 public class CommentsActivity extends AppCompatActivity {
 

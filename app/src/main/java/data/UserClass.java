@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity;
+package data;
 
 import java.security.Timestamp;
 
@@ -6,14 +6,14 @@ import java.security.Timestamp;
  * Created by ibrahim-01 on 7/17/2017.
  */
 
-public class userClass {
+public class UserClass {
 
 
     private String PrimaryLocation;
     private String ProfilePicture;
     private String Username;
 
-    public userClass(String Username, long timestamp, String ProfilePicture, String userBio,String PrimaryLocation, double phoneNo, boolean status) {
+    public UserClass(String Username, long timestamp, String ProfilePicture, String userBio, String PrimaryLocation, double phoneNo, boolean status) {
         this.Username = Username;
         this.timestamp = timestamp;
         this.UserBio = userBio;
@@ -99,7 +99,7 @@ public class userClass {
 
 
 
-    public userClass(String Username, double latitude, double longitude, double phoneNo, boolean status) {
+    public UserClass(String Username, double latitude, double longitude, double phoneNo, boolean status) {
 
         this.Username = Username;
         this.latitude = latitude;
@@ -108,7 +108,7 @@ public class userClass {
         this.status = status;
     }
 
-    public userClass(String Username, double latitude, double longitude ) {
+    public UserClass(String Username, double latitude, double longitude ) {
 
         this.Username = Username;
         this.latitude = latitude;
@@ -118,7 +118,7 @@ public class userClass {
 
 
 
-    public userClass(){
+    public UserClass(){
 
     }
 

@@ -1,36 +1,29 @@
-package com.example.sheryarkhan.projectcity;
+package com.example.sheryarkhan.projectcity.Activities;
 
-import android.content.res.Configuration;
-import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sheryarkhan.projectcity.R;
 import com.example.sheryarkhan.projectcity.Utils.BottomNavigationViewHelper;
-import com.example.sheryarkhan.projectcity.Utils.VideosViewPager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.example.sheryarkhan.projectcity.adapter.NewsFeedListAdapter;
+import com.example.sheryarkhan.projectcity.Adapters.NewsFeedListAdapter;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -104,7 +97,7 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         newsFeedRecyclerView.setHasFixedSize(true);
         newsFeedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        newsFeedListAdapter = new NewsFeedListAdapter(NewsFeedActivity.this,list,images);
+        newsFeedListAdapter = new NewsFeedListAdapter(list,images);
         newsFeedRecyclerView.setAdapter(newsFeedListAdapter);
 
         //FIREBASE REFERENCE

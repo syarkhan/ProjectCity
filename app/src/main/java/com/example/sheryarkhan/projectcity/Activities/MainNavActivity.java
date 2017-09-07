@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity;
+package com.example.sheryarkhan.projectcity.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

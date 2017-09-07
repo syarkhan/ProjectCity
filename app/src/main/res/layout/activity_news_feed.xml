@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sheryarkhan.projectcity.NewsFeedActivity"
+    tools:context="com.example.sheryarkhan.projectcity.Activities.NewsFeedActivity"
     android:background="@color/feed_bg"
     >
 
@@ -135,7 +135,7 @@
     <!--xmlns:tools="http://schemas.android.com/tools"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--tools:context="com.example.sheryarkhan.projectcity.NewsFeedActivity"-->
+    <!--tools:context="com.example.sheryarkhan.projectcity.Activities.NewsFeedActivity"-->
     <!--android:background="@color/feed_bg"-->
     <!--&gt;-->
 
