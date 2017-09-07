@@ -1,14 +1,11 @@
 package com.example.sheryarkhan.projectcity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
-import adapter.NewsFeedListAdapter;
+import com.example.sheryarkhan.projectcity.adapter.NewsFeedListAdapter;
 
 public class PostImageDisplayActivity extends AppCompatActivity {
 
@@ -24,7 +21,7 @@ public class PostImageDisplayActivity extends AppCompatActivity {
 
         int imgIndex = i.getIntExtra("imageIndex", 0);
 
-        postImageViewDisplay.setImageDrawable(NewsFeedListAdapter.newsFeedItemPOJOs.get(imgIndex).getImage());
+        //postImageViewDisplay.setImageDrawable(NewsFeedListAdapter.newsFeedItemPOJOs.get(imgIndex).getImage());
 
     }
 }

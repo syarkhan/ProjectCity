@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+    <!--#141E30-->
+    <!--#243b55-->
 <resources>
     <color name="colorPrimary">#243b55</color>
-    <color name="colorPrimaryDark">#FF141E30</color>
+    <color name="colorPrimaryDark">#141E30</color>
     <color name="colorAccent">#a9dbfd</color>
 
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="feed_bg">#d3d6db</color>
     <color name="feed_item_bg">#ffffff</color>
-    <color name="feed_item_border">#c2c3c8</color>
+    <color name="feed_item_border">#cccdd1</color>
     <color name="link">#0a80d1</color>
-    <color name="timestamp">#a0a3a7</color>
+    <color name="timestamp">#6b7076</color>
     <color name="textViewBgTracsparent">#0fffffff</color>
     <color name="btnTransparent">#0dffffff</color>
 

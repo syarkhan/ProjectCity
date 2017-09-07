@@ -97,7 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(mImageUri)
                     .apply(RequestOptions.circleCropTransform())
-
                     .into(userImage);
 
         }
@@ -161,13 +160,10 @@ public class ProfileActivity extends AppCompatActivity {
 
                 selectImage();
 
-
-
-
     }
 
 
-    public  void BtnSaveOnClick(View view){
+    public void BtnSaveOnClick(View view){
 //        databaseReference = FirebaseDatabase.getInstance().getReference();
 //
 //

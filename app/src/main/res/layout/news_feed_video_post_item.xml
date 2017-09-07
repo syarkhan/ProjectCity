@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+
     xmlns:tools="http://schemas.android.com/tools"
 
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginBottom="20dp"
+
+        >
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gradient_background"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/postNews"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Share your news"
+
+            tools:fontFamily="sans-serif" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:paddingTop="8dp"
+        android:paddingBottom="15dp"
         android:background="@drawable/feed_item_rounded_corner"
         android:orientation="vertical"
        >
@@ -31,7 +64,6 @@
                 android:id="@+id/imgProfilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
-                android:src="@drawable/loginbg"
                 android:scaleType="fitXY"
                 >
             </ImageView>
@@ -56,7 +88,6 @@
                     android:layout_width="match_parent"
                     android:text="20 mins ago"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
             </LinearLayout>
         </LinearLayout>
@@ -87,8 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="260dp"
             android:background="@color/white"
-            android:scaleType="fitCenter"
-            android:src="@drawable/q1bg"
+            android:scaleType="fitXY"
 
 
             />

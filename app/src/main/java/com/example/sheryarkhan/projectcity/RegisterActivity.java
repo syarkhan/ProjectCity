@@ -188,9 +188,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                        FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
 
-                       userClass userClassObj = new  userClass(username1,currentTimeStamp,123,"",0,0,strPhoneNo,true);
+                       userClass userClassObj = new  userClass(username1,currentTimeStamp,"pic2","badass","",strPhoneNo,true);
 
-                       databaseReference.child(user.getUid()).setValue(userClassObj);
+                       databaseReference.child("Users/"+user.getUid()).setValue(userClassObj);
 
                        //SingletonArrayList.getInstance().getArray().add(userClassObj.getFullName());
 

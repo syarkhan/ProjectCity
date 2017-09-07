@@ -9,17 +9,18 @@ import java.security.Timestamp;
 public class userClass {
 
 
-    private String fullName;
+    private String PrimaryLocation;
+    private String ProfilePicture;
+    private String Username;
 
-    public userClass(String fullName, long timestamp, long imageId, String userBio, double latitude, double longitude, double phoneNo, boolean status) {
-        this.fullName = fullName;
+    public userClass(String Username, long timestamp, String ProfilePicture, String userBio,String PrimaryLocation, double phoneNo, boolean status) {
+        this.Username = Username;
         this.timestamp = timestamp;
-        this.imageId = imageId;
         this.UserBio = userBio;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.ProfilePicture = ProfilePicture;
         this.phoneNo = phoneNo;
         this.status = status;
+        this.PrimaryLocation = PrimaryLocation;
     }
 
     private long timestamp;
@@ -64,12 +65,12 @@ public class userClass {
     }
 
 
-    public String getFullName() {
-        return fullName;
+    public String getUsername() {
+        return Username;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUsername(String Username) {
+        this.Username = Username;
     }
 
     public double getLatitude() {
@@ -98,18 +99,18 @@ public class userClass {
 
 
 
-    public userClass(String fullName, double latitude, double longitude, double phoneNo, boolean status) {
+    public userClass(String Username, double latitude, double longitude, double phoneNo, boolean status) {
 
-        this.fullName = fullName;
+        this.Username = Username;
         this.latitude = latitude;
         this.longitude = longitude;
         this.phoneNo = phoneNo;
         this.status = status;
     }
 
-    public userClass(String fullName, double latitude, double longitude ) {
+    public userClass(String Username, double latitude, double longitude ) {
 
-        this.fullName = fullName;
+        this.Username = Username;
         this.latitude = latitude;
         this.longitude = longitude;
 
@@ -122,6 +123,19 @@ public class userClass {
     }
 
 
+    public String getProfilePicture() {
+        return ProfilePicture;
+    }
 
+    public void setProfilePicture(String profilePicture) {
+        ProfilePicture = profilePicture;
+    }
 
+    public String getPrimaryLocation() {
+        return PrimaryLocation;
+    }
+
+    public void setPrimaryLocation(String primaryLocation) {
+        PrimaryLocation = primaryLocation;
+    }
 }

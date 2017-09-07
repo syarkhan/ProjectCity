@@ -2,6 +2,7 @@ package com.example.sheryarkhan.projectcity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,11 +35,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         if(firebaseAuth.getCurrentUser() != null){
             finish();
-            Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+            Intent intent = new Intent(getApplicationContext(),NewsFeedActivity.class);
             startActivity(intent);
         }
 
@@ -93,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     progressDialog.dismiss();
                     finish();
-                    Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),NewsFeedActivity.class);
                     startActivity(intent);
 
 
