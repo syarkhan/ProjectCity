@@ -36,9 +36,9 @@
         <activity android:name=".Activities.PostImageDisplayActivity" />
         <activity android:name=".Activities.UserProfileActivity" />
         <activity android:name=".Activities.CommentsActivity" />
-        <activity android:name=".Activities.ProfileActivity" />
+        <!--<activity android:name=".Activities.ProfileActivity" />-->
         <activity android:name=".Activities.SampleActivity"></activity>
-        <activity android:name=".Activities.LoginActivity">
+        <activity android:name=".Activities.ProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
