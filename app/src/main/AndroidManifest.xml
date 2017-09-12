@@ -4,9 +4,11 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +17,14 @@
         android:roundIcon="@mipmap/projectcityicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RegisterActivity">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GOOGLE_PLACES_API_KEY"/>
+
+
+        <activity android:name=".activities.RegisterActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -24,7 +33,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".Activities.NewsFeedActivity">
+        <activity android:name=".activities.NewsFeedActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -33,19 +42,19 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".Activities.PostImageDisplayActivity" />
-        <activity android:name=".Activities.UserProfileActivity" />
-        <activity android:name=".Activities.CommentsActivity" />
-        <!--<activity android:name=".Activities.ProfileActivity" />-->
-        <activity android:name=".Activities.SampleActivity"></activity>
-        <activity android:name=".Activities.ProfileActivity">
+        <activity android:name=".activities.PostImageDisplayActivity" />
+        <activity android:name=".activities.UserProfileActivity" />
+        <activity android:name=".activities.CommentsActivity" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.SampleActivity"/>
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.PostNewsActivity"></activity>
+        <activity android:name=".activities.PostNewsActivity"/>
     </application>
 
 </manifest>

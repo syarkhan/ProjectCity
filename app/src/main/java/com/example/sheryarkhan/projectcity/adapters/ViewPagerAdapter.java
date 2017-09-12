@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sheryarkhan.projectcity.R;
-import com.example.sheryarkhan.projectcity.utils.ImagesAndVideosViewPager;
+import com.example.sheryarkhan.projectcity.Utils.ImagesAndVideosViewPager;
 
 import java.util.Collections;
 import java.util.List;

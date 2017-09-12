@@ -20,7 +20,6 @@ public class PostsPOJO {
 
 
 
-
     public String getUsername() {
         return Username;
     }
@@ -97,4 +96,14 @@ public class PostsPOJO {
     public void setcontent_post(List<String> content_post) {
         this.content_post = content_post;
     }
+
+
+    public String ToString()
+    {
+        //return "[" + dept.Name + "," + OfferedCourse.Course.courseid + "," + room.RoomNumber + "," + OfferedCourse.Teacher.teacherid + "," + meetingTime.Id + "]";
+
+        return "[" + getUserID()+" ,"+ getProfilePic() + " ,"+ getcontent_post().toString() + " ,"+ getLocation() + " ,"+ getPostText() +"]";
+
+    }
+
 }

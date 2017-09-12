@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity.Activities;
+package com.example.sheryarkhan.projectcity.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -39,9 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         if(firebaseAuth.getCurrentUser() != null){
-            finish();
+
             Intent intent = new Intent(getApplicationContext(),NewsFeedActivity.class);
             startActivity(intent);
+            finish();
         }
 
         email = (EditText) findViewById(R.id.txtEmail);

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/feed_bg"
-    tools:context="com.example.sheryarkhan.projectcity.Activities.ProfileActivity"
+    tools:context="com.example.sheryarkhan.projectcity.activities.ProfileActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 
@@ -175,7 +175,7 @@
                     app:layout_constraintTop_toTopOf="@+id/btnBadgeImage" />
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btnEditProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:layout_marginBottom="16dp"

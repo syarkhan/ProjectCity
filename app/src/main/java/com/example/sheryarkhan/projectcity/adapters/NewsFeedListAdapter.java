@@ -21,7 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.sheryarkhan.projectcity.activities.CommentsActivity;
 import com.example.sheryarkhan.projectcity.activities.PostNewsActivity;
-import com.example.sheryarkhan.projectcity.glide.GlideApp;
+import com.example.sheryarkhan.projectcity.Glide.GlideApp;
 import com.example.sheryarkhan.projectcity.activities.ProfileActivity;
 import com.example.sheryarkhan.projectcity.R;
 import com.google.android.gms.tasks.OnSuccessListener;

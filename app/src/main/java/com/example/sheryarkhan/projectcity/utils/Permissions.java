@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity.utils;
+package com.example.sheryarkhan.projectcity.Utils;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

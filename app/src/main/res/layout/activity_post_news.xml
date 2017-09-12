@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context="com.example.sheryarkhan.projectcity.Activities.PostNewsActivity">
+    android:background="#f6f9fc"
+    tools:context="com.example.sheryarkhan.projectcity.activities.PostNewsActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/post_activity_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -55,12 +55,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/timestamp"
             android:ems="10"
             android:hint="What's your news?"
             android:inputType="textMultiLine"
             android:paddingBottom="20dp"
-            android:singleLine="false"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -94,14 +92,16 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/media_border_button"
-            android:drawableLeft="@drawable/add_media_icon"
+            android:foreground="?attr/selectableItemBackground"
+            android:drawableStart="@drawable/add_media_icon"
             android:drawablePadding="10dp"
             android:padding="12dp"
             android:text="Add Photo/Video"
             android:textAlignment="textStart"
             android:textAllCaps="false"
+            android:clickable="true"
             android:textColor="#3c3c3c"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -112,9 +112,6 @@
             android:id="@+id/btnPost"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-1dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
             android:background="@drawable/post_button_border"
             android:text="Post"
             android:textColor="@color/white"
@@ -136,19 +133,7 @@
             android:layout_marginEnd="8dp">
 
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/mediaPagerTabs"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mediaViewPager"
-                app:tabBackground="@drawable/tab_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                app:tabMaxWidth="10dp" />
+
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/mediaViewPager"
@@ -158,9 +143,22 @@
                 android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
-
                 app:layout_constraintRight_toRightOf="parent"
-                tools:layout_editor_absoluteY="16dp" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" />
+            <android.support.design.widget.TabLayout
+                android:id="@+id/mediaPagerTabs"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:visibility="visible"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mediaViewPager"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                app:tabMaxWidth="10dp" />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity.Activities;
+package com.example.sheryarkhan.projectcity.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

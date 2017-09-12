@@ -1,11 +1,14 @@
-package com.example.sheryarkhan.projectcity.Activities;
+package com.example.sheryarkhan.projectcity.activities;
 
+import android.content.Context;
+import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.sheryarkhan.projectcity.R;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.example.sheryarkhan.projectcity.Adapters.NewsFeedListAdapter;
+import com.example.sheryarkhan.projectcity.adapters.NewsFeedListAdapter;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -42,6 +45,7 @@ public class NewsFeedActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private List<String> images = Collections.emptyList();
+    private ValueEventListener mListener;
 
 
     private ArrayList<PostsPOJO> list;
@@ -66,6 +70,8 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
 //
 //        Query user = databaseReference.orderByChild("")
 //        for(int i=0;i<locations.length;i++)
@@ -82,6 +88,14 @@ public class NewsFeedActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+
+
+                if(vibrator.hasVibrator())
+                {
+                    vibrator.vibrate(30);
+                }
+                newsFeedListAdapter.notifyDataSetChanged();
                 Toast.makeText(getBaseContext(),"Refreshed",Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -96,8 +110,11 @@ public class NewsFeedActivity extends AppCompatActivity {
 
 
         newsFeedRecyclerView.setHasFixedSize(true);
+        newsFeedRecyclerView.setItemViewCacheSize(20);
+        newsFeedRecyclerView.setDrawingCacheEnabled(true);
+        newsFeedRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         newsFeedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        newsFeedListAdapter = new NewsFeedListAdapter(list,images);
+        newsFeedListAdapter = new NewsFeedListAdapter(list);
         newsFeedRecyclerView.setAdapter(newsFeedListAdapter);
 
         //FIREBASE REFERENCE
@@ -105,7 +122,7 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         //Query query = databaseReference.child("Posts").orderByChild("UserID").equalTo(3);
 
-        Query query = databaseReference.child("Posts");
+
 //        final Query userDetails = databaseReference.child("Users");
 
 //        query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -139,47 +156,51 @@ public class NewsFeedActivity extends AppCompatActivity {
 //        });
 
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot data : dataSnapshot.getChildren())
-                        {
-                            final PostsPOJO postsPOJO = data.getValue(PostsPOJO.class);
-                            images = postsPOJO.getcontent_post();
-//                            List<String> ls = dataSnapshot.child("content_post").getValue(List.class);
-//                            GenericTypeIndicator<List<PostsPOJO>> t = new GenericTypeIndicator<List<PostsPOJO>>() {};
-//
-//                            List<PostsPOJO> yourStringArray = dataSnapshot.getValue(t);
-                            Query userDetails = databaseReference.child("Users/"+postsPOJO.getUserID());
-                            userDetails.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String username = dataSnapshot.child("Username").getValue(String.class);
-                                    String profilePicturePath = dataSnapshot.child("ProfilePicture").getValue(String.class);
-
-//
-                                    //StorageReference filePath = storageReference.child("images").child("pic1");
-                                    //filePath.getFile(filePath).addOnSuccessListener();
-                                    list.add(new PostsPOJO(postsPOJO.getUserID(),profilePicturePath ,username, postsPOJO.getTimestamp(),postsPOJO.getPostText(),postsPOJO.getLocation(),postsPOJO.getcontent_post()));
-                                    Log.d("dadalist", list.toString());
-                                    newsFeedListAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+        Query query = databaseReference.child("Posts");
 
 
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren())
+                {
+
+                    final PostsPOJO postsPOJO = data.getValue(PostsPOJO.class);
+                    images = postsPOJO.getcontent_post();
+
+                    Log.d("datalist",list.toString());
+
+
+                    //Nested listener to fetch User's name and profile picture from another node "Users/UserID"
+                    final Query userDetails = databaseReference.child("Users/"+postsPOJO.getUserID());
+                    mListener = new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot1) {
+
+                            String username = dataSnapshot1.child("Username").getValue(String.class);
+                            String profilePicturePath = dataSnapshot1.child("ProfilePicture").getValue(String.class);
+
+                            list.add(new PostsPOJO(postsPOJO.getUserID(),profilePicturePath ,username, postsPOJO.getTimestamp(),postsPOJO.getPostText(),postsPOJO.getLocation(),postsPOJO.getcontent_post()));
+                            Log.d("datalist2", postsPOJO.getUserID()+","+profilePicturePath +","+username+","+postsPOJO.getTimestamp()+","+postsPOJO.getPostText()+","+postsPOJO.getLocation()+","+postsPOJO.getcontent_post());
+
+                            newsFeedListAdapter.notifyDataSetChanged();
+
+//                            userDetails.removeEventListener(mListener);
                         }
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    };
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                    userDetails.addListenerForSingleValueEvent(mListener);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
 
 

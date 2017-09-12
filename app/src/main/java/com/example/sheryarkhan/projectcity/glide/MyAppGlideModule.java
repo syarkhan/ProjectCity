@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity.glide;
+package com.example.sheryarkhan.projectcity.Glide;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;

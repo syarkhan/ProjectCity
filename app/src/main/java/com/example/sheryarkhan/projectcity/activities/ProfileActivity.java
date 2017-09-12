@@ -1,4 +1,4 @@
-package com.example.sheryarkhan.projectcity.Activities;
+package com.example.sheryarkhan.projectcity.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,6 +30,12 @@ import android.Manifest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.sheryarkhan.projectcity.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +49,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
 
     private EditText txtChangedUsername ;
@@ -69,6 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private FirebaseAuth firebaseAuth;
+    private GoogleApiClient mGoogleApiClient;
 
 
     //private Uri uriFilePath;
@@ -79,6 +86,15 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        //PlaceAutocomplete.IntentBuilder
 
 
 
@@ -150,6 +166,11 @@ public class ProfileActivity extends AppCompatActivity {
 //
 //
 
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
@@ -518,7 +539,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
 
-    }
+
+}
 
 
 
