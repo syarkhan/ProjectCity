@@ -32,10 +32,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.sheryarkhan.projectcity.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.GeoDataApi;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,6 +67,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
 
 
+
     private DatabaseReference databaseReference;
 
 
@@ -79,6 +76,8 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
 
     //private Uri uriFilePath;
+    private Button btnEditProfile;
+
 
 
 
@@ -87,12 +86,24 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
+        btnEditProfile = (Button)findViewById(R.id.btnEditProfile);
+
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this,LocationAutoCompleteActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+//        mGoogleApiClient = new GoogleApiClient
+//                .Builder(this)
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .enableAutoManage(this, this)
+//                .build();
 
         //PlaceAutocomplete.IntentBuilder
 
@@ -259,6 +270,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     boolean readExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
 
                     boolean cameraPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
                     boolean writeExternalFile = grantResults[0] == PackageManager.PERMISSION_GRANTED;
 
                     if(cameraPermission && readExternalFile && writeExternalFile)
@@ -497,7 +509,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 Glide.with(this)
                         .load(mImageUri)
                         .apply(RequestOptions.circleCropTransform())
-
                         .into(userImage);
 
                 editor.putString(getString(R.string.userImageUri), mImageUri.toString());

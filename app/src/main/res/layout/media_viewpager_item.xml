@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--<com.example.sheryarkhan.projectcity.Utils.-->
+        <!--android:id="@+id/imagesAndVideosViewPager"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone" />-->
 
-    <!--<ImageView-->
-    <!--android:id="@+id/imageView22"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <com.example.sheryarkhan.projectcity.Utils.ImagesAndVideosViewPager
-        android:id="@+id/imagesAndVideosViewPager"
+    <ImageView
+        android:id="@+id/postMediaImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        />
 
     <!--<com.example.sheryarkhan.projectcity.Utils.VideosViewPager-->
 

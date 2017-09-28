@@ -1,7 +1,11 @@
 package data;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sheryar Khan on 8/8/2017.
@@ -10,75 +14,112 @@ import java.util.List;
 public class PostsPOJO {
 
 
-    private int UserID;
-    private String Username;
-    private Long Timestamp;
-    private String PostText;
-    private String Location;
-    private String profilePic;
-    private List<String> content_post;
+    private int userid;
+    private String username;
+    private Long timestamp;
+    private String posttext;
+    private String location;
+    private String secondarylocation;
+    private String profilepicture;
+    private Map<String,Boolean> content_post;
+    private Map<String,Boolean> likes = new HashMap<>();
 
 
 
-    public String getUsername() {
-        return Username;
+    public String getusername() {
+        return username;
     }
 
-    public void setUsername(String username) {
-        Username = username;
+    public void setusername(String username) {
+        this.username = username;
     }
 
-    public String getProfilePic() {
-        return profilePic;
+    public String getprofilepicture() {
+        return profilepicture;
     }
 
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+    public void setprofilepicture(String profilepicture) {
+        this.profilepicture = profilepicture;
     }
 
-    public int getUserID() {
+    public int getuserid() {
 
-        return UserID;
+        return userid;
     }
 
-    public void setUserID(int userID) {
-        UserID = userID;
+    public void setuserid(int userid) {
+        this.userid = userid;
     }
 
-    public Long getTimestamp() {
-        return Timestamp;
+    public Long gettimestamp() {
+        return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
-        Timestamp = timestamp;
+    public void settimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getPostText() {
-        return PostText;
+    public String getposttext() {
+        return posttext;
     }
 
-    public void setPostText(String postText) {
-        PostText = postText;
+    public void setposttext(String posttext) {
+        this.posttext = posttext;
     }
 
-    public String getLocation() {
-        return Location;
+    public String getlocation() {
+        return location;
     }
 
-    public void setLocation(String location) {
-        this.Location = location;
+    public void setlocation(String location) {
+        this.location = location;
     }
 
 
-    public PostsPOJO(int userID,String profilepic, String username, Long timestamp, String postText, String location,List<String> postcontent)
+    //WITH LIKES CONSTRUCTOR
+    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+                     String posttext, String location,String secondarylocation,
+                     Map<String,Boolean> content_post,Map<String,Boolean> likes)
     {
-        UserID = userID;
-        Username = username;
-        Timestamp = timestamp;
-        PostText = postText;
-        Location = location;
-        profilePic = profilepic;
-        content_post = postcontent;
+        this.userid = userid;
+        this.username = username;
+        this.timestamp = timestamp;
+        this.posttext = posttext;
+        this.location = location;
+        this.secondarylocation = secondarylocation;
+        this.profilepicture = profilepicture;
+        this.content_post = content_post;
+        this.likes = likes;
+
+    }
+
+
+    //WITHOUT LIKES CONSTRUCTOR
+    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+                     String posttext, String location,String secondarylocation,
+                     Map<String,Boolean> content_post)
+    {
+        this.userid = userid;
+        this.username = username;
+        this.timestamp = timestamp;
+        this.posttext = posttext;
+        this.location = location;
+        this.secondarylocation = secondarylocation;
+        this.profilepicture = profilepicture;
+        this.content_post = content_post;
+    }
+
+    //WITHOUT MEDIA CONSTRUCTOR
+    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+                     String posttext, String location,String secondarylocation)
+    {
+        this.userid = userid;
+        this.username = username;
+        this.timestamp = timestamp;
+        this.posttext = posttext;
+        this.location = location;
+        this.secondarylocation = secondarylocation;
+        this.profilepicture = profilepicture;
 
     }
 
@@ -89,21 +130,50 @@ public class PostsPOJO {
 
     }
 
-    public List<String> getcontent_post() {
+    public Map<String,Boolean> getcontent_post() {
         return content_post;
     }
 
-    public void setcontent_post(List<String> content_post) {
+    public void setcontent_post(Map<String,Boolean> content_post) {
         this.content_post = content_post;
     }
 
+    //@Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("userid", userid);
+        result.put("username", username);
+        result.put("timestamp", timestamp);
+        result.put("posttext", posttext);
+        result.put("location", location);
+        result.put("secondarylocation", secondarylocation);
+        result.put("profilepicture", profilepicture);
+        result.put("content_post",content_post);
+        result.put("likes",likes);
+
+        return result;
+    }
 
     public String ToString()
     {
-        //return "[" + dept.Name + "," + OfferedCourse.Course.courseid + "," + room.RoomNumber + "," + OfferedCourse.Teacher.teacherid + "," + meetingTime.Id + "]";
 
-        return "[" + getUserID()+" ,"+ getProfilePic() + " ,"+ getcontent_post().toString() + " ,"+ getLocation() + " ,"+ getPostText() +"]";
+        return "[" + getuserid()+" ,"+ getprofilepicture() + " ,"+ getcontent_post().toString() + " ,"+ getlocation() + " ,"+ getposttext() +"]";
 
     }
 
+    public String getsecondarylocation() {
+        return secondarylocation;
+    }
+
+    public void setSecondarylocation(String secondarylocation) {
+        this.secondarylocation = secondarylocation;
+    }
+
+    public Map<String, Boolean> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Map<String, Boolean> likes) {
+        this.likes = likes;
+    }
 }

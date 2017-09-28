@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,6 +26,11 @@ import com.example.sheryarkhan.projectcity.Glide.GlideApp;
 import com.example.sheryarkhan.projectcity.activities.ProfileActivity;
 import com.example.sheryarkhan.projectcity.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -60,11 +66,14 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
     public static List<PostsPOJO> newsFeedItemPOJOs = Collections.emptyList();
 
+    private DatabaseReference databaseReference;
+
     public NewsFeedListAdapter(List<PostsPOJO> newsFeedItems)
     {
         //this.context = context;
         this.newsFeedItemPOJOs = newsFeedItems;
         storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         //inflater = LayoutInflater.from(context);
 
@@ -110,6 +119,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
             case TYPE_SHARE_NEWS:
                 return new ShareNewsPostViewHolder(LayoutInflater.from(context).inflate(R.layout.share_news_item_layout, parent, false));
+
         }
             return null;
 //        View view = inflater.inflate(R.layout.news_feed_list_item,parent,false);
@@ -130,6 +140,8 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         //final Context context = holder.itemView.getContext();
         if(holder.getItemViewType() == TYPE_NEWS_POST){
 
+
+//            notifyDataSetChanged();
             OnlyPostImageViewHolder mholder = (OnlyPostImageViewHolder) holder;
             setUpPictureView(context,mholder,position-1);
         }
@@ -146,6 +158,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                 Toast.makeText(context,"Share news post",Toast.LENGTH_SHORT).show();
             }
         });
+
         }
 //        else {
 //            OnlyPostVideoViewHolder mHolder = (OnlyPostVideoViewHolder) holder;
@@ -196,7 +209,48 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 //        holder.container.setLayoutParams(params);
 
     }
+//    protected void postAndNotifyAdapter(final Handler handler, final RecyclerView recyclerView, final RecyclerView.Adapter adapter) {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!recyclerView.isComputingLayout()) {
+//                    adapter.notifyDataSetChanged();
+//                } else {
+//                    postAndNotifyAdapter(handler, recyclerView, adapter);
+//                }
+//            }
+//        });
+//    }
 
+//    @Override
+//    public void onViewRecycled(MainViewHolder holder) {
+//        super.onViewRecycled(holder);
+//        int position = holder.getAdapterPosition();
+//
+////        switch (getItemViewType(position))
+////        {
+////            case TYPE_NEWS_POST:
+////                OnlyPostImageViewHolder mholder = (OnlyPostImageViewHolder) holder;
+////                mholder.txtName.setText("");
+////
+////            case TYPE_SHARE_NEWS:
+////
+////        }
+//        if(position > 0)
+//        {
+//            OnlyPostImageViewHolder mholder = (OnlyPostImageViewHolder) holder;
+//            mholder.txtName.setText("");
+//        }
+//
+//
+//    }
+
+//    @Override
+//    public void onViewRecycled(MainViewHolder holder) {
+//        super.onViewRecycled(holder);
+//        OnlyPostImageViewHolder mholder = (OnlyPostImageViewHolder) holder;
+//        mholder.txtName.setText("");
+//    }
 
     private void setUpPictureView(final Context context, final OnlyPostImageViewHolder mholder, final int position) {
 
@@ -237,10 +291,60 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             mholder.viewPager.setVisibility(View.VISIBLE);
         }
 
+//        final DatabaseReference userDetails = databaseReference.child("Users/"+currentData.getUserID());
+//        userDetails.addListenerForSingleValueEvent(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot1) {
+//
+//                String username = dataSnapshot1.child("Username").getValue(String.class);
+//                String profilePicturePath = dataSnapshot1.child("ProfilePicture").getValue(String.class);
+
+                //mholder.txtName.setBackground(null);
+                //mholder.txtName.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                //mholder.txtName.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                mholder.txtName.setText(currentData.getusername());
+
+                StorageReference filePath = storageReference.child("images").child(currentData.getprofilepicture());
+
+
+                filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        try {
+                            GlideApp.with(context)
+                                    .load(uri)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                    .circleCrop()
+                                    .transition(DrawableTransitionOptions.withCrossFade(1000))
+                                    .error(R.color.link)
+                                    .into(mholder.imgProfilePic);
+                        } catch (Exception ex) {
+                            Log.d("error", ex.toString());
+                        }
+                    }
+                });
+
+                //Toast.makeText(getApplicationContext(),username.toString(),Toast.LENGTH_LONG).show();
+
+
+                //list.add(new PostsPOJO(postsPOJO.getUserID(),profilePicturePath ,username, postsPOJO.getTimestamp(),postsPOJO.getPostText(),postsPOJO.getLocation(),postsPOJO.getcontent_post()));
+                //Log.d("datalist2", postsPOJO.getUserID()+","+profilePicturePath +","+username+","+postsPOJO.getTimestamp()+","+postsPOJO.getPostText()+","+postsPOJO.getLocation()+","+postsPOJO.getcontent_post());
+
+
+
+//                            userDetails.removeEventListener(mListener);
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+
+
 
         //mholder.viewPager.setPageTransformer(true, new Zoom);
         //viewPager.setAdapter(viewPagerAdapter);
-        mholder.txtName.setText(currentData.getUsername());
+
         mholder.txtName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -251,38 +355,17 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
         // Converting timestamp into X ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                Long.parseLong(String.valueOf(currentData.getTimestamp())),
+                Long.parseLong(String.valueOf(currentData.gettimestamp())),
                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
 
         mholder.txtTimeStamp.setText(timeAgo);
-        mholder.txtLocation.setText(currentData.getLocation());
+        mholder.txtLocation.setText(currentData.getlocation());
 
-        mholder.txtStatusMsg.setText(currentData.getPostText());
+        mholder.txtSecondary.setText(currentData.getsecondarylocation());
 
-        StorageReference filePath = storageReference.child("images").child(currentData.getProfilePic()+".jpg");
+        mholder.txtStatusMsg.setText(currentData.getposttext());
 
 
-        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                try {
-                    GlideApp.with(context)
-                            .load(uri)
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .circleCrop()
-                            .transition(DrawableTransitionOptions.withCrossFade(1000))
-                            .error(R.color.link)
-                            .into(mholder.imgProfilePic);
-//                    Glide.with(context)
-//                            .load(uri)
-//                            .apply(options)
-//                            .transition(DrawableTransitionOptions.withCrossFade())
-//                            .into(mholder.imgProfilePic);
-                } catch (Exception ex) {
-                    Log.d("error", ex.toString());
-                }
-            }
-        });
 
         mholder.imgProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,6 +403,8 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
 
 
+
+
     public class ShareNewsPostViewHolder extends MainViewHolder {
 
         TextView txtShareNews;
@@ -346,7 +431,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         TextView txtName;
         TextView txtTimeStamp;
         TextView txtStatusMsg;
-        TextView txtLikesAndComments,txtLocation;
+        TextView txtLikesAndComments,txtLocation,txtSecondary;
         //TextView txtUrl;
         ImageView imgProfilePic;
         //ImageView imgPost;
@@ -370,6 +455,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             txtLikesAndComments = (TextView) itemView.findViewById(R.id.txtLikesAndComments);
 
             txtLocation = (TextView) itemView.findViewById(R.id.txtLocation);
+            txtSecondary = (TextView) itemView.findViewById(R.id.txtSecondary);
             imgProfilePic = (ImageView) itemView.findViewById(R.id.imgProfilePic);
 
 

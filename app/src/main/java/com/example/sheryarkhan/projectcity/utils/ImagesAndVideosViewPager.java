@@ -17,7 +17,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sheryar Khan on 8/27/2017.
@@ -30,7 +32,7 @@ public class ImagesAndVideosViewPager extends android.support.v7.widget.AppCompa
 
 
     Context context;
-    List<String> images;
+    Map<String, Boolean> images;
     int position;
     Activity activity;
     ImagesAndVideosViewPager imagesAndVideosViewPager;
@@ -62,7 +64,7 @@ public class ImagesAndVideosViewPager extends android.support.v7.widget.AppCompa
     }
 
 
-    public void Init(Context context, List<String> images, int position, View view) {
+    public void Init(Context context, Map<String, Boolean> images, int position, View view) {
 
 
         this.context = context;
@@ -107,7 +109,7 @@ public class ImagesAndVideosViewPager extends android.support.v7.widget.AppCompa
 //        options.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
 
 
-        StorageReference filePath = storageReference.child("images").child(images.get(position)+".jpg");
+        StorageReference filePath = storageReference.child("images").child(new ArrayList<>(images.keySet()).get(position));
         filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -117,7 +119,7 @@ public class ImagesAndVideosViewPager extends android.support.v7.widget.AppCompa
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()
                             .error(R.color.link)
-                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .transition(DrawableTransitionOptions.withCrossFade(1000))
                             .into(imagesAndVideosViewPager);
                 } catch (Exception ex) {
                     Log.d("error", ex.toString());
@@ -129,7 +131,7 @@ public class ImagesAndVideosViewPager extends android.support.v7.widget.AppCompa
         imagesAndVideosViewPager.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"Hi : "+images.get(position).toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Hi : "+new ArrayList<>(images.keySet()).get(position),Toast.LENGTH_SHORT).show();
             }
         });
 

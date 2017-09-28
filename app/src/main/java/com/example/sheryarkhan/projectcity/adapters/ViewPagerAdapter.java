@@ -12,6 +12,7 @@ import com.example.sheryarkhan.projectcity.Utils.ImagesAndVideosViewPager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sheryar Khan on 8/7/2017.
@@ -22,12 +23,12 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 
     Context context;
-    List<String> images = Collections.emptyList();
+    Map<String, Boolean> images = Collections.emptyMap();
     LayoutInflater layoutInflater;
     Activity activity;
 
 
-    public ViewPagerAdapter(Context context, List<String> images) {
+    public ViewPagerAdapter(Context context, Map<String, Boolean> images) {
         this.context = context;
         this.images = images;
         layoutInflater = LayoutInflater.from(context);

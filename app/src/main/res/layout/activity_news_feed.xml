@@ -70,6 +70,28 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/recyclerViewProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/txtNetworkError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cannot load data"
+            android:textSize="20sp"
+            android:background="#eee"
+            android:gravity="center"
+            android:visibility="gone"
+            />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -80,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/news_feed_recyclerview"
+            android:visibility="visible"
             android:divider="@null"
             android:overScrollMode="never"
             android:background="#f6f9fc"
@@ -90,6 +113,8 @@
 
         </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

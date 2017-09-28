@@ -9,11 +9,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sheryarkhan.projectcity.R;
 import com.example.sheryarkhan.projectcity.Utils.BottomNavigationViewHelper;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +34,8 @@ import com.example.sheryarkhan.projectcity.adapters.NewsFeedListAdapter;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import org.w3c.dom.Text;
+
 import data.NewsFeedItemPOJO;
 import data.PostsPOJO;
 
@@ -45,10 +51,18 @@ public class NewsFeedActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private List<String> images = Collections.emptyList();
-    private ValueEventListener mListener;
+    private ChildEventListener mChildListener;
+    private ProgressBar recyclerViewProgressBar;
+    private TextView txtNetworkError;
+
+    private LinearLayoutManager linearLayoutManager;
 
 
     private ArrayList<PostsPOJO> list;
+
+    boolean isFirstTime = true;
+    int counter = 1;
+    DatabaseReference query;
 //    ArrayList<NewsFeedItemPOJO> list3;
 //    private ViewPager viewPager;
 //    private ViewPagerAdapter viewPagerAdapter;
@@ -65,8 +79,13 @@ public class NewsFeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_feed);
+        Log.d("onCreate","onCreate "+counter++);
+
 
         setupBottomNavigationView();
+
+        recyclerViewProgressBar = (ProgressBar)findViewById(R.id.recyclerViewProgressBar);
+        txtNetworkError = (TextView)findViewById(R.id.txtNetworkError);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -95,7 +114,10 @@ public class NewsFeedActivity extends AppCompatActivity {
                 {
                     vibrator.vibrate(30);
                 }
-                newsFeedListAdapter.notifyDataSetChanged();
+                //newsFeedListAdapter.notifyDataSetChanged();
+                recyclerViewProgressBar.setVisibility(View.GONE);
+                txtNetworkError.setVisibility(View.GONE);
+                newsFeedRecyclerView.setVisibility(View.VISIBLE);
                 Toast.makeText(getBaseContext(),"Refreshed",Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -113,9 +135,11 @@ public class NewsFeedActivity extends AppCompatActivity {
         newsFeedRecyclerView.setItemViewCacheSize(20);
         newsFeedRecyclerView.setDrawingCacheEnabled(true);
         newsFeedRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        newsFeedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager = new LinearLayoutManager(this);
+        newsFeedRecyclerView.setLayoutManager(linearLayoutManager);
         newsFeedListAdapter = new NewsFeedListAdapter(list);
         newsFeedRecyclerView.setAdapter(newsFeedListAdapter);
+        newsFeedListAdapter.notifyItemChanged(0);
 
         //FIREBASE REFERENCE
         //databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -156,52 +180,224 @@ public class NewsFeedActivity extends AppCompatActivity {
 //        });
 
 
-        Query query = databaseReference.child("Posts");
 
+        query = databaseReference.child("posts");
 
+//        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+//        connectedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                boolean connected = snapshot.getValue(Boolean.class);
+//                if (connected) {
+//                    System.out.println("connected");
+//
+//                } else {
+//                    System.out.println("not connected");
+//                    Toast.makeText(NewsFeedActivity.this,"No Internet Connection!",Toast.LENGTH_SHORT).show();
+//                    recyclerViewProgressBar.setVisibility(View.GONE);
+//                    txtNetworkError.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                System.err.println("Listener was cancelled");
+//            }
+//        });
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data : dataSnapshot.getChildren())
-                {
-
-                    final PostsPOJO postsPOJO = data.getValue(PostsPOJO.class);
-                    images = postsPOJO.getcontent_post();
-
-                    Log.d("datalist",list.toString());
-
 
                     //Nested listener to fetch User's name and profile picture from another node "Users/UserID"
-                    final Query userDetails = databaseReference.child("Users/"+postsPOJO.getUserID());
-                    mListener = new ValueEventListener() {
+//                    final DatabaseReference userDetails = databaseReference.child("Users/"+postsPOJO.getUserID());
+//                    mListener = new ValueEventListener() {
+//
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot1) {
+//
+//                            String username = dataSnapshot1.child("Username").getValue(String.class);
+//                            String profilePicturePath = dataSnapshot1.child("ProfilePicture").getValue(String.class);
+//
+//                            Toast.makeText(getApplicationContext(),username.toString(),Toast.LENGTH_LONG).show();
+//
+//                            list.get(list.indexOf(postsPOJO.getPostText())).setProfilePic(profilePicturePath);
+//                            list.get(list.indexOf(postsPOJO.getPostText())).setUsername(username);
+//                            //list.add(new PostsPOJO(postsPOJO.getUserID(),profilePicturePath ,username, postsPOJO.getTimestamp(),postsPOJO.getPostText(),postsPOJO.getLocation(),postsPOJO.getcontent_post()));
+//                            Log.d("datalist2", postsPOJO.getUserID()+","+profilePicturePath +","+username+","+postsPOJO.getTimestamp()+","+postsPOJO.getPostText()+","+postsPOJO.getLocation()+","+postsPOJO.getcontent_post());
+//
+//                            newsFeedListAdapter.notifyDataSetChanged();
+//
+////                            userDetails.removeEventListener(mListener);
+//                        }
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//                        }
+//                    };
+//
+//                    userDetails.addListenerForSingleValueEvent(mListener);
 
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot1) {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                final PostsPOJO postsPOJO = dataSnapshot.getValue(PostsPOJO.class);
+//                //images = postsPOJO.getcontent_post();
+//
+//                list.add(new PostsPOJO(postsPOJO.getuserid(),
+//                        postsPOJO.getprofilepicture() ,postsPOJO.getusername(),
+//                        postsPOJO.gettimestamp(),postsPOJO.getposttext(),
+//                        postsPOJO.getlocation(),postsPOJO.getsecondarylocation()
+//                        ,postsPOJO.getcontent_post(),postsPOJO.getLikes()));
+//
+//                recyclerViewProgressBar.setVisibility(View.GONE);
+//                newsFeedRecyclerView.setVisibility(View.VISIBLE);
+//                newsFeedListAdapter.notifyItemInserted(1);
+//                newsFeedListAdapter.notifyItemRangeChanged(1,list.size());
+//
+//
+//                Log.d("datalist",list.toString());
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                final PostsPOJO postsPOJO = dataSnapshot.getValue(PostsPOJO.class);
+//
+//                list.remove(postsPOJO);
+//                newsFeedListAdapter.notifyItemRemoved(list.indexOf(postsPOJO));
+//                newsFeedListAdapter.notifyItemRangeChanged(list.indexOf(postsPOJO),list.size());
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
 
-                            String username = dataSnapshot1.child("Username").getValue(String.class);
-                            String profilePicturePath = dataSnapshot1.child("ProfilePicture").getValue(String.class);
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            list.add(new PostsPOJO(postsPOJO.getUserID(),profilePicturePath ,username, postsPOJO.getTimestamp(),postsPOJO.getPostText(),postsPOJO.getLocation(),postsPOJO.getcontent_post()));
-                            Log.d("datalist2", postsPOJO.getUserID()+","+profilePicturePath +","+username+","+postsPOJO.getTimestamp()+","+postsPOJO.getPostText()+","+postsPOJO.getLocation()+","+postsPOJO.getcontent_post());
 
-                            newsFeedListAdapter.notifyDataSetChanged();
+                for(DataSnapshot item : dataSnapshot.getChildren()) {
+                    final PostsPOJO postsPOJO = item.getValue(PostsPOJO.class);
+                    //images = postsPOJO.getcontent_post();
 
-//                            userDetails.removeEventListener(mListener);
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    };
+                    list.add(new PostsPOJO(postsPOJO.getuserid(),
+                            postsPOJO.getprofilepicture() ,postsPOJO.getusername(),
+                            postsPOJO.gettimestamp(),postsPOJO.getposttext(),
+                            postsPOJO.getlocation(),postsPOJO.getsecondarylocation()
+                            ,postsPOJO.getcontent_post(),postsPOJO.getLikes()));
+                    Log.d("datalist",list.toString());
 
-                    userDetails.addListenerForSingleValueEvent(mListener);
                 }
+                    Collections.reverse(list);
+                    recyclerViewProgressBar.setVisibility(View.GONE);
+                    newsFeedRecyclerView.setVisibility(View.VISIBLE);
+                    newsFeedListAdapter.notifyDataSetChanged();
+                    isFirstTime = false;
+
+
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
 
+
+
+
+    mChildListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            if (!isFirstTime) {
+                final PostsPOJO postsPOJO = dataSnapshot.getValue(PostsPOJO.class);
+                //images = postsPOJO.getcontent_post();
+
+                list.add(0, new PostsPOJO(postsPOJO.getuserid(),
+                        postsPOJO.getprofilepicture(), postsPOJO.getusername(),
+                        postsPOJO.gettimestamp(), postsPOJO.getposttext(),
+                        postsPOJO.getlocation(), postsPOJO.getsecondarylocation()
+                        , postsPOJO.getcontent_post(), postsPOJO.getLikes()));
+
+                newsFeedListAdapter.notifyItemInserted(1);
+                newsFeedListAdapter.notifyItemRangeChanged(1, list.size());
+            }
+
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    query.addChildEventListener(mChildListener);
+
+
+
+
+
+
+//query.addChildEventListener(new ChildEventListener() {
+//    @Override
+//    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//        final PostsPOJO postsPOJO = dataSnapshot.getValue(PostsPOJO.class);
+//        //images = postsPOJO.getcontent_post();
+//
+//        list.add(new PostsPOJO(postsPOJO.getuserid(),
+//                postsPOJO.getprofilepicture() ,postsPOJO.getusername(),
+//                postsPOJO.gettimestamp(),postsPOJO.getposttext(),
+//                postsPOJO.getlocation(),postsPOJO.getsecondarylocation()
+//                ,postsPOJO.getcontent_post(),postsPOJO.getLikes()));
+//
+//        newsFeedListAdapter.notifyItemInserted(0);
+//
+//    }
+//
+//    @Override
+//    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//    }
+//
+//    @Override
+//    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+////        final PostsPOJO postsPOJO = dataSnapshot.getValue(PostsPOJO.class);
+////        list.remove(postsPOJO);
+////        newsFeedListAdapter.notifyItemRemoved();
+//
+//    }
+//
+//    @Override
+//    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//    }
+//
+//    @Override
+//    public void onCancelled(DatabaseError databaseError) {
+//
+//    }
+//});
 
 
 //                query.addChildEventListener(new ChildEventListener() {
@@ -321,8 +517,55 @@ public class NewsFeedActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-//    @Override
+        //newsFeedRecyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+//            //this is the top of the RecyclerView
+//
+//
+//        }
+
+        Log.d("onPause","onPause "+counter++);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("onResume","onResume "+counter++);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("onStart","onStart "+counter++);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("onStop","onStop "+counter++);
+        query.removeEventListener(mChildListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("onDestroy","onDestroy "+counter++);
+    }
+
+    //    @Override
 //    public void onConfigurationChanged(Configuration newConfig) {
 //        super.onConfigurationChanged(newConfig);
 //        VideosViewPager questionVideo = new VideosViewPager(NewsFeedActivity.this);
