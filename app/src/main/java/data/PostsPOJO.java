@@ -14,7 +14,7 @@ import java.util.Map;
 public class PostsPOJO {
 
 
-    private int userid;
+    private String userid;
     private String username;
     private Long timestamp;
     private String posttext;
@@ -42,12 +42,12 @@ public class PostsPOJO {
         this.profilepicture = profilepicture;
     }
 
-    public int getuserid() {
+    public String getuserid() {
 
         return userid;
     }
 
-    public void setuserid(int userid) {
+    public void setuserid(String userid) {
         this.userid = userid;
     }
 
@@ -77,7 +77,7 @@ public class PostsPOJO {
 
 
     //WITH LIKES CONSTRUCTOR
-    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+    public PostsPOJO(String userid,String profilepicture, String username, Long timestamp,
                      String posttext, String location,String secondarylocation,
                      Map<String,Boolean> content_post,Map<String,Boolean> likes)
     {
@@ -95,7 +95,7 @@ public class PostsPOJO {
 
 
     //WITHOUT LIKES CONSTRUCTOR
-    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+    public PostsPOJO(String userid,String profilepicture, String username, Long timestamp,
                      String posttext, String location,String secondarylocation,
                      Map<String,Boolean> content_post)
     {
@@ -110,7 +110,7 @@ public class PostsPOJO {
     }
 
     //WITHOUT MEDIA CONSTRUCTOR
-    public PostsPOJO(int userid,String profilepicture, String username, Long timestamp,
+    public PostsPOJO(String userid,String profilepicture, String username, Long timestamp,
                      String posttext, String location,String secondarylocation)
     {
         this.userid = userid;

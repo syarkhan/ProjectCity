@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +24,9 @@ import com.example.sheryarkhan.projectcity.adapters.MediaPickerRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import data.PostsPOJO;
@@ -30,19 +34,24 @@ import data.PostsPOJO;
 public class MediaPickerActivity extends AppCompatActivity {
 
 
-    private String[] arrPath;
+    private ArrayList<ArrayList<String>> arrPath;
+    private Map<Integer, String> arrPath2 = new HashMap<>();
     private int ids[];
     private int count;
     private Bitmap[] thumbnails;
 
 
-
-
 //    String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID };
 //    final String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
 
-    String[] columns = { MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns._ID };
+    String[] columns = {MediaStore.Files.FileColumns._ID,
+            MediaStore.Files.FileColumns.DATA,
+            MediaStore.Files.FileColumns.MEDIA_TYPE,
+            MediaStore.Files.FileColumns.DATE_ADDED,
+            MediaStore.Video.VideoColumns.DURATION};
+
     final String orderBy = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+
     String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
             + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
             + " OR "
@@ -58,32 +67,31 @@ public class MediaPickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_picker);
 
-        customMediaRecyclerView = (RecyclerView)findViewById(R.id.customMediaRecyclerView);
-        btnSelectMedia = (Button)findViewById(R.id.btnSelectMedia);
+        customMediaRecyclerView = (RecyclerView) findViewById(R.id.customMediaRecyclerView);
+        btnSelectMedia = (Button) findViewById(R.id.btnSelectMedia);
 
         btnSelectMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                HashMap<Integer,String> hashMap = mediaPickerRecyclerAdapter.getHashMap();
+                HashMap<Integer, String> hashMap = mediaPickerRecyclerAdapter.getHashMap();
 
                 Intent intent = new Intent();
-                intent.putExtra("hashMap",hashMap);
-                setResult(Activity.RESULT_OK,intent);
+                intent.putExtra("hashMap", hashMap);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
 
 
-        Cursor imagecursor = getContentResolver().query(MediaStore.Files.getContentUri("external"), columns,selection , null, orderBy);
+        Cursor imagecursor = getContentResolver().query(MediaStore.Files.getContentUri("external"), columns, selection, null, orderBy);
 
         int image_column_index;
-        if(imagecursor != null && imagecursor.moveToFirst())
-        {
+        if (imagecursor != null && imagecursor.moveToFirst()) {
             image_column_index = imagecursor.getColumnIndex(MediaStore.Files.FileColumns._ID);
             this.count = imagecursor.getCount();
             this.thumbnails = new Bitmap[this.count];
-            this.arrPath = new String[this.count];
+            this.arrPath = new ArrayList<>(this.count);
             ids = new int[count];
             for (int i = 0; i < this.count; i++) {
                 imagecursor.moveToPosition(i);
@@ -91,31 +99,57 @@ public class MediaPickerActivity extends AppCompatActivity {
                 int dataColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 bmOptions.inSampleSize = 4;
-                int type = imagecursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)+(i+1);
-                //if(type == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE || )
-                //int t = imagecursor.getInt(type);
-                if(type == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
+                int mediaTypeIndex = imagecursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE);
+                if(imagecursor.getInt(mediaTypeIndex) == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
                 {
-                    thumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
-                            this.getContentResolver(), ids[i],
-                            MediaStore.Images.Thumbnails.MINI_KIND, bmOptions);
+//                    thumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
+//                            this.getContentResolver(), ids[i],
+//                            MediaStore.Images.Thumbnails.MINI_KIND, bmOptions);
+
+                    //arrPath2.put(i,map);
+                    ArrayList<String> arr = new ArrayList<>();
+                    arr.add("1"); // 1 FOR IMAGE
+                    arr.add(imagecursor.getString(dataColumnIndex));
+                    arrPath.add(arr);
+
                 }
-                else if(type == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+                else if(imagecursor.getInt(mediaTypeIndex) == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
                 {
-                    thumbnails[i] = MediaStore.Video.Thumbnails.getThumbnail(
-                            this.getContentResolver(), ids[i],
-                            MediaStore.Video.Thumbnails.MINI_KIND, bmOptions);
+                    //arrPath[i] = imagecursor.getString(dataColumnIndex);
+                    ArrayList<String> arr = new ArrayList<>();
+                    arr.add("2"); // 2 FOR VIDEO
+                    arr.add(imagecursor.getString(dataColumnIndex));
+                    arrPath.add(arr);
+
+//                    Uri baseUri = Uri.parse("content://media/external/video/media");
+//                    Uri uri = Uri.withAppendedPath(baseUri, "" + ids[i]);
+//                    thumbnails[i] = MediaStore.Video.Thumbnails.getThumbnail(
+//                            this.getContentResolver(), ids[i],
+//                            MediaStore.Video.Thumbnails.MINI_KIND, bmOptions);
+                    //long duration = imagecursor.getLong(imagecursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
+//                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//                    retriever.setDataSource(imagecursor.getString(dataColumnIndex));
+//                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//                    long timeInmillisec = Long.parseLong( time );
+//                    long duration2 = timeInmillisec / 1000;
+                    //arrPath2.put(i,map);
+                    //int in=0;
+
                 }
-                arrPath[i] = imagecursor.getString(dataColumnIndex);
+
+
                 //typeMedia[i] = imagecursor.getInt(type);
             }
             imagecursor.close();
         }
 
 
-
-        customMediaRecyclerView = (RecyclerView)findViewById(R.id.customMediaRecyclerView);
-        customMediaRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        customMediaRecyclerView = (RecyclerView) findViewById(R.id.customMediaRecyclerView);
+        customMediaRecyclerView.setHasFixedSize(true);
+        customMediaRecyclerView.setItemViewCacheSize(20);
+        customMediaRecyclerView.setDrawingCacheEnabled(true);
+        customMediaRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        customMediaRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mediaPickerRecyclerAdapter = new MediaPickerRecyclerAdapter(arrPath);
         customMediaRecyclerView.setAdapter(mediaPickerRecyclerAdapter);
     }

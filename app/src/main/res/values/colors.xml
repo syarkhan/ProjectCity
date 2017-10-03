@@ -7,6 +7,7 @@
     <color name="colorAccent">#35a3ef</color>
 
     <color name="white">#ffffff</color>
+    <color name="green">#30d679</color>
     <color name="black">#000000</color>
     <color name="feed_bg">#d3d6db</color>
     <color name="feed_item_bg">#ffffff</color>

@@ -1,7 +1,9 @@
 package com.example.sheryarkhan.projectcity.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +13,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sheryarkhan.projectcity.R;
+
 import data.UserClass;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
@@ -27,15 +33,14 @@ import com.google.firebase.database.FirebaseDatabase;
 public class RegisterActivity extends AppCompatActivity {
 
 
-    private EditText txtUsername ;
+    private static final String MY_PREFS_NAME = "UserData";
+    private EditText txtUsername;
     private EditText txtEmail;
-    private EditText txtMobileNo;
     private EditText txtPassword;
     private EditText txtConfirmPassword;
 
 
     private DatabaseReference databaseReference;
-
 
 
     private FirebaseAuth firebaseAuth;
@@ -45,48 +50,39 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registor);
 
 
-
         txtUsername = (EditText) findViewById(R.id.txtName);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
-        txtMobileNo = (EditText) findViewById(R.id.txtMobile);
         txtPassword = (EditText) findViewById(R.id.txtPass);
         txtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPass);
 
 
+    }
 
 
+    public void BtnLogInIntentOnClick(View view) {
 
-            }
-
-
-    public  void BtnLogInIntentOnClick(View view){
-
-        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
 
     }
-       public void BtnRegisterOnClick(View view){
 
-           String username1 = txtUsername.getText().toString().trim();
+    public void BtnRegisterOnClick(View view) {
 
-           String email = txtEmail.getText().toString().trim();
-           String password = txtPassword.getText().toString().trim();
-           String confirmPassword = txtConfirmPassword.getText().toString().trim();
-           String strPhoneNo = txtMobileNo.getText().toString().trim();
+        final String username = txtUsername.getText().toString().trim();
+
+        final String email = txtEmail.getText().toString().trim();
+        String password = txtPassword.getText().toString().trim();
+        String confirmPassword = txtConfirmPassword.getText().toString().trim();
+        //String strPhoneNo = txtMobileNo.getText().toString().trim();
 
 
-           databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
 //           Query query = databaseReference.orderByChild("fullName").equalTo(username1);
 //
@@ -111,12 +107,8 @@ public class RegisterActivity extends AppCompatActivity {
 //           });
 
 
-           // ArrayList<String> usersList = SingletonArrayList.getInstance().getArray();
-           // HashMap<String, String> usersHash =    MapsActivity.getHashmap();
-
-
-
-
+        // ArrayList<String> usersList = SingletonArrayList.getInstance().getArray();
+        // HashMap<String, String> usersHash =    MapsActivity.getHashmap();
 
 
 //           Log.i("single",SingletonArrayList.getInstance().getArray().toString());
@@ -128,78 +120,74 @@ public class RegisterActivity extends AppCompatActivity {
 //
 
 
-           if (TextUtils.isEmpty(email)) {
-               Toast.makeText(getApplicationContext(), "Please Enter Email", Toast.LENGTH_LONG).show();
-               return;
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getApplicationContext(), "Please Enter Email", Toast.LENGTH_LONG).show();
+            return;
 
 
-           }
+        }
 
-           if (TextUtils.isEmpty(password)) {
-               Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_LONG).show();
-               return;
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_LONG).show();
+            return;
 
-           }
-           if (TextUtils.isEmpty(username1)) {
-               Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_LONG).show();
-               return;
+        }
+        if (TextUtils.isEmpty(username)) {
+            Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_LONG).show();
+            return;
 
-           }
+        }
 
+        boolean resultOfComparison = password.equals(confirmPassword);
 
-
-
-
-           if (TextUtils.isEmpty(strPhoneNo)) {
-               Toast.makeText(getApplicationContext(), "Please Enter Phone number", Toast.LENGTH_LONG).show();
-               return;
-
-           }
+        if (!resultOfComparison) {
+            Toast.makeText(getApplicationContext(), "Your Password and Confirm Password does not match", Toast.LENGTH_LONG).show();
+            return;
+        }
 
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Registering new user");
+        progressDialog.show();
 
-           boolean resultOfComparison = password.equals(confirmPassword);
-
-           if (!resultOfComparison) {
-               Toast.makeText(getApplicationContext(), "Your Password and Confirm Password does not match", Toast.LENGTH_LONG).show();
-               return;
-           }
-
-
-           progressDialog = new ProgressDialog(this);
-           progressDialog.setMessage("Registering new user");
-           progressDialog.show();
-
-           firebaseAuth = FirebaseAuth.getInstance();
-           firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-               @Override
-               public void onComplete(@NonNull Task<AuthResult> task) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
 
 
-                   if (task.isSuccessful()) {
-                       Long currentTimeStamp = System.currentTimeMillis();
+                if (task.isSuccessful()) {
+                    SharedPreferences sharedPref = RegisterActivity.this.getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor editor = sharedPref.edit();
+                    Long currentTimeStamp = System.currentTimeMillis();
+
+                    //final String username = txtUsername.getText().toString().trim();
+
+                    //double strPhoneNo =   Double.parseDouble( txtMobileNo.getText().toString().trim());
+
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+
+                    final FirebaseUser user = firebaseAuth.getCurrentUser();
 
 
+                    UserClass userClassObj = new UserClass(currentTimeStamp, null, null, true, "", "", "", null, username, email);
 
+                    databaseReference.child("Users/" + user.getUid()).setValue(userClassObj).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            editor.putString("userid",user.getUid());
+                            editor.putString("username", username);
+                            editor.putString("profilepicture","");
+                            editor.apply();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                       String username1 = txtUsername.getText().toString().trim();
+                        }
+                    });
 
-                       double strPhoneNo =   Double.parseDouble( txtMobileNo.getText().toString().trim());
-
-                       databaseReference = FirebaseDatabase.getInstance().getReference();
-
-                       FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
-
-                       UserClass userClassObj = new UserClass(username1,currentTimeStamp,"pic2","badass","",strPhoneNo,true);
-
-                       databaseReference.child("Users/"+user.getUid()).setValue(userClassObj);
-
-                       //SingletonArrayList.getInstance().getArray().add(userClassObj.getFullName());
-
-
-
-
-
+                    //SingletonArrayList.getInstance().getArray().add(userClassObj.getFullName());
 
 
 //                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -218,49 +206,49 @@ public class RegisterActivity extends AppCompatActivity {
 //                                        }
 //                                    }
 //                                });
-                       progressDialog.dismiss();
+                    progressDialog.dismiss();
 
-                       //Toast.makeText(getApplicationContext(), "yos firebase hae", Toast.LENGTH_LONG).show();
-                       finish();
-                       Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                       startActivity(intent);
-
-
-                   } else {
-                       progressDialog.dismiss();
-                       try {
-                           throw task.getException();
-                       } catch (FirebaseAuthWeakPasswordException e) {
-
-                           Toast.makeText(getApplicationContext(), "please select a strong password", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "yos firebase hae", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    //finish();
 
 
 
-                       } catch (FirebaseAuthInvalidCredentialsException e) {
-                           Toast.makeText(getApplicationContext(), "please enter valid information", Toast.LENGTH_LONG).show();
+                } else {
+                    progressDialog.dismiss();
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthWeakPasswordException e) {
+
+                        Toast.makeText(getApplicationContext(), "Please select a strong password", Toast.LENGTH_LONG).show();
 
 
-                       } catch (FirebaseAuthUserCollisionException e) {
-
-                           Toast.makeText(getApplicationContext(), "User Already Exists", Toast.LENGTH_LONG).show();
-
-
-                       }
-                       catch (FirebaseNetworkException e) {
-
-                           Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        Toast.makeText(getApplicationContext(), "Please enter valid information", Toast.LENGTH_LONG).show();
 
 
-                       } catch (Exception e) {
-                           Toast.makeText(getApplicationContext(), "Server error", Toast.LENGTH_LONG).show();
+                    } catch (FirebaseAuthUserCollisionException e) {
 
-                       }
-
-                   }
+                        Toast.makeText(getApplicationContext(), "Email Already Exists", Toast.LENGTH_LONG).show();
 
 
-               }
-           });
+                    } catch (FirebaseNetworkException e) {
+
+                        Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
+
+
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Server error", Toast.LENGTH_LONG).show();
+
+                    }
+
+                }
+
+
+            }
+        });
 
 //       catch(Exception e){
 //        progressDialog.dismiss();
@@ -269,7 +257,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-       }
+}
 
 
 

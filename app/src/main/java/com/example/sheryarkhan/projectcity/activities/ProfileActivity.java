@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -28,14 +29,18 @@ import android.Manifest;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.sheryarkhan.projectcity.Glide.GlideApp;
 import com.example.sheryarkhan.projectcity.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -55,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 //    private EditText txtDescription;
 //    private EditText txtChangedMobileNo;
     private ImageView userImage;
-    private Button uploadButton;
+    private Button uploadButton, btnLogout;
     private static final int REQUEST_OPEN_RESULT_CODE = 0;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri mImageUri;
@@ -88,6 +93,25 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
         btnEditProfile = (Button)findViewById(R.id.btnEditProfile);
 
+        btnLogout = (Button)findViewById(R.id.btnLogout);
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                databaseReference = FirebaseDatabase.getInstance().getReference();
+
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                //databaseReference.child(user.getUid()).child("status").setValue(false);
+                firebaseAuth.signOut();
+                finish();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,12 +138,14 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
         try{
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences("UserData",Context.MODE_PRIVATE);
         String defaultValue = getResources().getString(R.string.userImageUri);
-        String imageURI = sharedPref.getString(getString(R.string.userImageUri), defaultValue);
+        String imageURI = sharedPref.getString("profilepicture", "");
         mImageUri = Uri.parse(imageURI);
-            Glide.with(this)
+            GlideApp.with(this)
                     .load(mImageUri)
+                    .transition(DrawableTransitionOptions.withCrossFade(1000))
+                    .error(R.color.link)
                     .apply(RequestOptions.circleCropTransform())
                     .into(userImage);
 
@@ -500,19 +526,33 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences("UserData",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         if (requestCode == REQUEST_OPEN_RESULT_CODE && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
                 mImageUri = resultData.getData();
+
+                /*String[] columns = {MediaStore.Images.Media.ORIENTATION};
+                Cursor cursor = getApplicationContext().getContentResolver().query(mImageUri, columns, null, null, null);
+                if (cursor == null)
+                {
+
+                }
+                else {
+                    cursor.moveToFirst();
+                    int orientationColumnIndex = cursor.getColumnIndex(columns[0]);
+                    int rotation = cursor.getInt(orientationColumnIndex);
+                    cursor.close();
+                }*/
+
 
                 Glide.with(this)
                         .load(mImageUri)
                         .apply(RequestOptions.circleCropTransform())
                         .into(userImage);
 
-                editor.putString(getString(R.string.userImageUri), mImageUri.toString());
-                editor.commit();
+                editor.putString("profilepicture", mImageUri.toString());
+                editor.apply();
 
             }
         } else if (requestCode == 100) {
@@ -520,10 +560,9 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 Glide.with(this)
                         .load(mImageUri)
                         .apply(RequestOptions.circleCropTransform())
-
                         .into(userImage);
-                editor.putString(getString(R.string.userImageUri), mImageUri.toString());
-                editor.commit();
+                editor.putString("profilepicture", mImageUri.toString());
+                editor.apply();
 
 //                userImage.setImageURI(mImageUri);
             }

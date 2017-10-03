@@ -1,6 +1,7 @@
 package data;
 
 import java.security.Timestamp;
+import java.util.Map;
 
 /**
  * Created by ibrahim-01 on 7/17/2017.
@@ -8,52 +9,52 @@ import java.security.Timestamp;
 
 public class UserClass {
 
-
-    private String PrimaryLocation;
-    private String ProfilePicture;
-    private String Username;
-
-    public UserClass(String Username, long timestamp, String ProfilePicture, String userBio, String PrimaryLocation, double phoneNo, boolean status) {
-        this.Username = Username;
-        this.timestamp = timestamp;
-        this.UserBio = userBio;
-        this.ProfilePicture = ProfilePicture;
-        this.phoneNo = phoneNo;
-        this.status = status;
-        this.PrimaryLocation = PrimaryLocation;
-    }
-
-    private long timestamp;
-    private long imageId;
-    private String UserBio;
-    private double latitude;
-    private double longitude;
-    private double phoneNo;
+    private long dateofjoining;
+    private String profilepicture;
+    private String bio;
     private boolean status;
+    private String primarylocation;
+    private String city;
+    private String town;
+    private Map<String,Boolean> secondarylocations;
+    private String username;
+    private String email;
 
-
-    public long getTimestamp() {
-        return timestamp;
+    public UserClass(long dateofjoining, String profilepicture, String bio, boolean status, String primarylocation, String city, String town, Map<String, Boolean> secondarylocations, String username, String email) {
+        this.dateofjoining = dateofjoining;
+        this.profilepicture = profilepicture;
+        this.bio = bio;
+        this.status = status;
+        this.primarylocation = primarylocation;
+        this.city = city;
+        this.town = town;
+        this.secondarylocations = secondarylocations;
+        this.username = username;
+        this.email = email;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public long getDateofjoining() {
+        return dateofjoining;
     }
 
-    public long getImageId() {
-        return imageId;
+    public void setDateofjoining(long dateofjoining) {
+        this.dateofjoining = dateofjoining;
     }
 
-    public void setImageId(long imageId) {
-        this.imageId = imageId;
+    public String getProfilepicture() {
+        return profilepicture;
     }
 
-    public String getUserBio() {
-        return UserBio;
+    public void setProfilepicture(String profilepicture) {
+        this.profilepicture = profilepicture;
     }
 
-    public void setUserBio(String userBio) {
-        UserBio = userBio;
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public boolean isStatus() {
@@ -64,78 +65,51 @@ public class UserClass {
         this.status = status;
     }
 
+    public String getPrimarylocation() {
+        return primarylocation;
+    }
+
+    public void setPrimarylocation(String primarylocation) {
+        this.primarylocation = primarylocation;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getSuburb() {
+        return town;
+    }
+
+    public void setSuburb(String town) {
+        this.town = town;
+    }
+
+    public Map<String, Boolean> getSecondarylocations() {
+        return secondarylocations;
+    }
+
+    public void setSecondarylocations(Map<String, Boolean> secondarylocations) {
+        this.secondarylocations = secondarylocations;
+    }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
-    public void setUsername(String Username) {
-        this.Username = Username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(double phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-
-
-    public UserClass(String Username, double latitude, double longitude, double phoneNo, boolean status) {
-
-        this.Username = Username;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.phoneNo = phoneNo;
-        this.status = status;
-    }
-
-    public UserClass(String Username, double latitude, double longitude ) {
-
-        this.Username = Username;
-        this.latitude = latitude;
-        this.longitude = longitude;
-
-    }
-
-
-
-    public UserClass(){
-
-    }
-
-
-    public String getProfilePicture() {
-        return ProfilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        ProfilePicture = profilePicture;
-    }
-
-    public String getPrimaryLocation() {
-        return PrimaryLocation;
-    }
-
-    public void setPrimaryLocation(String primaryLocation) {
-        PrimaryLocation = primaryLocation;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

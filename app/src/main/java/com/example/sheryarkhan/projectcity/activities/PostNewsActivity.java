@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.sheryarkhan.projectcity.R;
+import com.example.sheryarkhan.projectcity.Utils.ImageCompression;
 import com.example.sheryarkhan.projectcity.adapters.ShareNewsMediaViewPagerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,14 +64,14 @@ public class PostNewsActivity extends AppCompatActivity {
     private Uri mImageUri;
     private ViewPager mediaViewPager;
     private TabLayout mediaPagerTabs;
-    private TextView txtPrimary,txtSecondary,txtPostLocation;
+    private TextView txtPrimary, txtSecondary, txtPostLocation;
     private ImageView imgClearLocations;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
 
-    private Map<Integer,String> hashMap = Collections.emptyMap();
-    private Map<String,Boolean> media = new HashMap<>();
+    private Map<Integer, String> hashMap = Collections.emptyMap();
+    private Map<String, Boolean> media = new HashMap<>();
 
     private static final int REQUEST_OPEN_RESULT_CODE = 0;
 
@@ -117,8 +118,8 @@ public class PostNewsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(PostNewsActivity.this,MediaPickerActivity.class);
-                startActivityForResult(intent,11);
+                Intent intent = new Intent(PostNewsActivity.this, MediaPickerActivity.class);
+                startActivityForResult(intent, 11);
 //                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //                intent1.addCategory(Intent.CATEGORY_OPENABLE);
 //                intent1.setType("image/*");
@@ -133,23 +134,35 @@ public class PostNewsActivity extends AppCompatActivity {
         btnPostNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedPref = PostNewsActivity.this.getSharedPreferences("UserData",Context.MODE_PRIVATE);
+                final String username = sharedPref.getString("username","");
+                final String userid = sharedPref.getString("userid","");
+                String imageURI = sharedPref.getString("profilepicture", "");
                 final String key = mDatabase.child("posts").push().getKey();
 
                 FirebaseStorage storage = FirebaseStorage.getInstance();
 
-                StorageReference storageRef =  storage.getReference();
+                StorageReference storageRef = storage.getReference();
 
                 // Uri file = Uri.fromFile(new File(mImageUri.toString()));
 
-                final Iterator iterator = hashMap.values().iterator();
+                //final Iterator iterator = hashMap.values().iterator();
+                Map<Integer, Bitmap> hMap = new HashMap<>();
+                int i = 0;
+                for (String item : hashMap.values()) {
+                    Bitmap bmp = ImageCompression.getImageFromResult(PostNewsActivity.this, item);//your compressed bitmap here
+                    hMap.put(i, bmp);
+                    i++;
+                }
+                final Iterator iterator = hMap.values().iterator();
 
                 //for(String path : hashMap.values())
-                if(!iterator.hasNext())
-                {
+                if (!iterator.hasNext()) {
                     Long timeStamp = System.currentTimeMillis();
 
+
                     //List<String> media = (List)hashMap.values();
-                    PostsPOJO postsPOJO = new PostsPOJO(2, "image:13688", "Faizan Khan Zaeef", timeStamp, editTextShareNews.getText().toString(),
+                    PostsPOJO postsPOJO = new PostsPOJO(userid, "image:13688",username , timeStamp, editTextShareNews.getText().toString(),
                             txtPrimary.getText().toString(), txtSecondary.getText().toString());
 
 
@@ -159,19 +172,24 @@ public class PostNewsActivity extends AppCompatActivity {
                 }
 
 
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
 
-                    String uniqueId= UUID.randomUUID().toString();
-                    media.put("image:"+uniqueId,true);
-                    StorageReference mediaRef = storageRef.child("images/image:"+uniqueId);
+                    String uniqueId = UUID.randomUUID().toString();
+                    media.put("image:" + uniqueId, true);
+                    StorageReference mediaRef = storageRef.child("images/image:" + uniqueId);
 
-                    String path = iterator.next().toString();
-                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                    Bitmap bitmap = BitmapFactory.decodeFile(path,bmOptions);
+                    Bitmap path = (Bitmap) iterator.next();
+
+                    //BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                    path.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                     byte[] byteData = baos.toByteArray();
-                    bitmap.recycle();
+
+
+
+                    path.recycle();
+
 
                     try {
                         baos.close();
@@ -179,27 +197,27 @@ public class PostNewsActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Uri file = Uri.fromFile(new File(path));
+                    //Uri file = Uri.fromFile(new File(path));
                     mediaRef.putBytes(byteData).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("storageerror",e.toString());
+                            Log.d("storageerror", e.toString());
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getBaseContext(),"uploaded",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "uploaded", Toast.LENGTH_SHORT).show();
 
 
-                            if(!iterator.hasNext()) {
+                            if (!iterator.hasNext()) {
 
                                 Long timeStamp = System.currentTimeMillis();
 
                                 //List<String> media = (List)hashMap.values();
-                                PostsPOJO postsPOJO = new PostsPOJO(2, "image:13688", "Faizan Khan Zaeef", timeStamp, editTextShareNews.getText().toString(),
+
+                                PostsPOJO postsPOJO = new PostsPOJO(userid, "image:13688", username, timeStamp, editTextShareNews.getText().toString(),
                                         txtPrimary.getText().toString(), txtSecondary.getText().toString(),
                                         media);
-
 
                                 Map<String, Object> childUpdates = new HashMap<>();
                                 childUpdates.put("/posts/" + key, postsPOJO);
@@ -211,12 +229,17 @@ public class PostNewsActivity extends AppCompatActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            Toast.makeText(PostNewsActivity.this,progress+"% done",Toast.LENGTH_LONG).show();
+                            Toast.makeText(PostNewsActivity.this, progress + "% done", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("uploadError",e.toString());
                         }
                     });
                 }
 
-                startActivity(new Intent(PostNewsActivity.this,NewsFeedActivity.class));
+                startActivity(new Intent(PostNewsActivity.this, NewsFeedActivity.class));
 
             }
         });
@@ -236,15 +259,13 @@ public class PostNewsActivity extends AppCompatActivity {
 //                        .load(mImageUri)
 //                        .apply(RequestOptions.circleCropTransform())
 //                        .into(userImage);
-            }
-            else if (resultCode == RESULT_CANCELED) {
+            } else if (resultCode == RESULT_CANCELED) {
 
             }
-        }
-        else if (requestCode == 10) {
+        } else if (requestCode == 10) {
 
             if (resultCode == RESULT_OK) {
-                JSONObject address=null;
+                JSONObject address = null;
                 String town;
                 String suburb;
                 String primaryLocation = resultData.getStringExtra("primaryLocation");
@@ -253,17 +274,15 @@ public class PostNewsActivity extends AppCompatActivity {
                     address = new JSONObject(secondaryLocation);
                     txtPostLocation.setVisibility(View.GONE);
                     txtPrimary.setText(primaryLocation);
-                    if(address.has("suburb"))
-                    {
+                    if (address.has("suburb")) {
                         suburb = address.getString("suburb");
                         txtSecondary.setText(suburb);
-                    }
-                    else if(address.has("town")) {
+                    } else if (address.has("town")) {
                         town = address.getString("town");
                         txtSecondary.setText(town);
                     }
 
-                    txtPrimary.setTextColor(getResources().getColor(R.color.colorAccent,null));
+                    txtPrimary.setTextColor(getResources().getColor(R.color.colorAccent, null));
                     txtPrimary.setVisibility(View.VISIBLE);
                     txtSecondary.setVisibility(View.VISIBLE);
                     imgClearLocations.setVisibility(View.VISIBLE);
@@ -272,31 +291,41 @@ public class PostNewsActivity extends AppCompatActivity {
                 }
 
                 //editTextPostLocation.setText(editTextValue);
-            }
-            else if (resultCode == RESULT_CANCELED) {
+            } else if (resultCode == RESULT_CANCELED) {
 
             }
 
 
-        }
-        else if (requestCode == 11) {
+        } else if (requestCode == 11) {
 
             if (resultCode == RESULT_OK) {
 
+
+                //startPosting(bmp);
                 hashMap = (HashMap<Integer, String>) resultData.getSerializableExtra("hashMap");
+                //Map<Integer,Bitmap> hMap = new HashMap<>();
+                //int i=0;
+//                for (String item:hashMap.values()) {
+//
+//                    Bitmap bmp = ImageCompression.getImageFromResult(this, resultCode, item);//your compressed bitmap here
+//                    hMap.put(i,bmp);
+//
+//                    i++;
+//
+//                }
+
+
                 //Toast.makeText(getApplicationContext(),hashMap.toString(),Toast.LENGTH_LONG).show();
-                ShareNewsMediaViewPagerAdapter viewPagerAdapter = new ShareNewsMediaViewPagerAdapter(PostNewsActivity.this,hashMap);
+                ShareNewsMediaViewPagerAdapter viewPagerAdapter = new ShareNewsMediaViewPagerAdapter(PostNewsActivity.this, hashMap);
                 mediaViewPager.setAdapter(viewPagerAdapter);
-                mediaPagerTabs.setupWithViewPager(mediaViewPager,true);
+                mediaPagerTabs.setupWithViewPager(mediaViewPager, true);
+
+            } else if (resultCode == RESULT_CANCELED) {
 
             }
-            else if (resultCode == RESULT_CANCELED) {
-
-            }
 
 
-        }
-        else if (requestCode == 100) {
+        } else if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
 
 //                Glide.with(this)
