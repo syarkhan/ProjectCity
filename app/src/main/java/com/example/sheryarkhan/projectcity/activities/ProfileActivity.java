@@ -139,7 +139,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         try{
 
         SharedPreferences sharedPref = this.getSharedPreferences("UserData",Context.MODE_PRIVATE);
-        String defaultValue = getResources().getString(R.string.userImageUri);
         String imageURI = sharedPref.getString("profilepicture", "");
         mImageUri = Uri.parse(imageURI);
             GlideApp.with(this)
@@ -310,7 +309,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     } else
                         {
                         Snackbar.make(this.findViewById(android.R.id.content),
-                                "Please Grant Permissions to upload profile photo",
+                                "Please grant permissions to upload profile photo",
                                 Snackbar.LENGTH_SHORT).setAction("ENABLE",
                                 new View.OnClickListener() {
                                     @Override

@@ -296,7 +296,7 @@ public class NewsFeedActivity extends AppCompatActivity {
                     recyclerViewProgressBar.setVisibility(View.GONE);
                     newsFeedRecyclerView.setVisibility(View.VISIBLE);
                     newsFeedListAdapter.notifyDataSetChanged();
-                    isFirstTime = false;
+                    isFirstTime = false;//asdasd
 
 
             }
